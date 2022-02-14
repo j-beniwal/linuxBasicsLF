@@ -151,12 +151,12 @@ One can think of a partition as a container in which a filesystem resides, altho
 
 A comparison between filesystems in Windows and Linux is given in the accompanying table:
 
-  	                              | Windows 	         | Linux
---------------------------------- | -------------------- | ----------------     
-Partition                         | 	Disk1            |	/dev/sda1
-Filesystem Type                   |	    NTFS/VFAT        |	EXT3/EXT4/XFS/BTRFS...
-Mounting Parameters               |   	DriveLetter      |	MountPoint
-Base Folder (where OS is stored)  |	C:\ 	             |  /
+  	                                | Windows 	            | Linux
+----------------------------------- | --------------------- | ----------------     
+Partition                           | 	Disk1               |	/dev/sda1
+Filesystem Type                     |	    NTFS/VFAT       |	EXT3/EXT4/XFS/BTRFS...
+Mounting Parameters                 |   	DriveLetter     |	MountPoint
+Base Folder (where OS is stored)    |	C:\                 |  /
 
 ### The Filesystem Hierarchy Standard ###
 
@@ -169,7 +169,7 @@ Linux uses the ‘/’ character to separate paths (unlike Windows, which uses �
 
 ### More About the Filesystem Hierarchy Standard ###
 
-All Linux filesystem names are case-sensitive, so /boot, /Boot, and /BOOT represent three different directories (or folders). Many distributions distinguish between core utilities needed for proper system operation and other programs, and place the latter in directories under /usr (think user). To get a sense for how the other programs are organized, find the /usr directory in the diagram from the previous page and compare the subdirectories with those that exist directly under the system root directory (/).
+All Linux filesystem names are case-sensitive, so /boot, /Boot, and /BOOT represent three different directories (or folders). Many distributions distinguish between core utilities needed for proper system operation and other programs, and place the latter in directories under /usr (think user). To get a sense for how the other programs are organized, find the /usr directory in the diagram from the previous page and compare the sub directories with those that exist directly under the system root directory (/).
 
 ![imate](https://courses.edx.org/assets/courseware/v1/65256a6c88506b6e45744b97b8875775/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/fstree1.png)
 
@@ -240,4 +240,4 @@ You have completed Chapter 3. Let’s summarize the key concepts covered:
     - By dividing the hard disk into partitions, data can be grouped and separated as needed. When a failure or mistake occurs, only the data in the affected partition will be damaged, while the data on the other partitions will likely survive.
     - The boot process has multiple steps, starting with BIOS, which triggers the boot loader to start up the Linux kernel. From there, the initramfs filesystem is invoked, which triggers the init program to complete the startup process.
     - Determining the appropriate distribution to deploy requires that you match your specific system needs to the capabilities of the different distributions.
-- 
+
