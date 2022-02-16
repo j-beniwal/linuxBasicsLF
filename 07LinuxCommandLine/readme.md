@@ -173,3 +173,148 @@ cd / 	|   Changes your current directory to the root (/) directory (or path you 
 ls 	    |   List the contents of the present working directory
 ls –a 	|   List all files, including hidden files and directories (those whose name start with . )
 tree 	|   Displays a tree view of the filesystem
+
+## Hard Links ##
+
+The ln utility is used to create hard links and (with the -s option) soft links, also known as symbolic links or symlinks. These two kinds of links are very useful in UNIX-based operating systems.
+
+Suppose that file1 already exists. A hard link, called file2, is created with the command:
+
+$ ln file1 file2
+
+Note that two files now appear to exist. However, a closer inspection of the file listing shows that this is not quite true.
+
+$ ls -li file1 file2
+
+The -i option to ls prints out in the first column the inode number, which is a unique quantity for each file object. This field is the same for both of these files; what is really going on here is that it is only one file, but it has more than one name associated with it, as is indicated by the 2 that appears in the ls output. Thus, there was already another object linked to file1 before the command was executed.
+
+Hard links are very useful and they save space, but you have to be careful with their use, sometimes in subtle ways. For one thing, if you remove either file1 or file2 in the example, the inode object (and the remaining file name) will remain, which might be undesirable, as it may lead to subtle errors later if you recreate a file of that name.
+
+If you edit one of the files, exactly what happens depends on your editor; most editors, including vi and gedit, will retain the link by default, but it is possible that modifying one of the names may break the link and result in the creation of two objects.
+
+## Soft (Symbolic) Links ##
+Soft (or Symbolic) links are created with the -s option, as in:
+
+$ ln -s file1 file3
+$ ls -li file1 file3
+
+Notice file3 no longer appears to be a regular file, and it clearly points to file1 and has a different inode number.
+
+Symbolic links take no extra space on the filesystem (unless their names are very long). They are extremely convenient, as they can easily be modified to point to different places. An easy way to create a shortcut from your home directory to long pathnames is to create a symbolic link.
+
+Unlike hard links, soft links can point to objects even on different filesystems, partitions, and/or disks and other media, which may or may not be currently available or even exist. In the case where the link does not point to a currently available or existing object, you obtain a dangling link.
+
+## Navigating the Directory History ##
+The cd command remembers where you were last, and lets you get back there with cd -. For remembering more than just the last directory visited, use pushd to change the directory instead of cd; this pushes your starting directory onto a list. Using popd will then send you back to those directories, walking in reverse order (the most recent directory will be the first one retrieved with popd). The list of directories is displayed with the dirs command.
+
+Find out the location of the ip network utility.
+
+student:/tmp> which ip
+
+/usr/sbin/ip
+
+student:/tmp> whereis ip
+
+ip: /usr/sbin/ip /usr/share/man/man7/ip.7.gz /usr/share/man/man8/ip.8.gz
+      
+## Working with Files ##
+Linux provides many commands that help you with viewing the contents of a file, creating a new file or an empty file, changing the timestamp of a file, and moving, removing and renaming a file or directory. These commands help you in managing your data and files and in ensuring that the correct data is available at the correct location.
+
+## Viewing Files ##
+
+Command     |	Usage
+----------- | ----------------------------------------------------------------------------------------
+cat 	    |   Used for viewing files that are not very long; it does not provide any scroll-back.
+tac 	    |   Used to look at a file backwards, starting with the last line.
+less 	    |   Used to view larger files because it is a paging program. It pauses at each screen  full of text, provides scroll-back capabilities, and lets you search and navigate within the file.
+
+            |    NOTE: Use / to search for a pattern in the forward direction and ? for a pattern in   the backward direction. An older program named more is still used, but has fewer capabilities: "less is more".
+tail 	    |   Used to print the last 10 lines of a file by default. You can change the number of lines by doing -n 15 or just -15 if you wanted to look at the last 15 lines instead of the default.
+head 	    |   The opposite of tail; by default, it prints the first 10 lines of a file.
+
+## touch ##
+touch is often used to set or update the access, change, and modify times of files. By default, it resets a file's timestamp to match the current time.
+
+However, you can also create an empty file using touch:
+
+$ touch <filename>
+
+This is normally done to create an empty file as a placeholder for a later purpose.
+
+touch provides several useful options. For example, the -t option allows you to set the date and timestamp of the file to a specific value, as in:
+
+$ touch -t 12091600 myfile
+
+This sets the myfile file's timestamp to 4 p.m., December 9th (12 09 1600).
+
+## mkdir and rmdir ##
+mkdir is used to create a directory:
+
+    * mkdir sampdir 
+    * It creates a sample directory named sampdir under the current directory. 
+    * mkdir /usr/sampdir 
+    * It creates a sample directory called sampdir under /usr.
+
+Removing a directory is done with rmdir. The directory must be empty or the command will fail. To remove a directory and all of its contents you have to do rm -rf.
+
+## Moving, Renaming or Removing a File ##
+
+Note that mv does double duty, in that it can:
+
+    * Simply rename a file
+    * Move a file to another location, while possibly changing its name at the same time.
+
+If you are not certain about removing files that match a pattern you supply, it is always good to run rm interactively (rm –i) to prompt before every removal.
+
+Command 	|   Usage
+----------- | ------------------------------------------
+mv 	        |   Rename a file 
+rm 	        |   Remove a file 
+rm –f 	    |   Forcefully remove a file
+rm –i 	    |   Interactively remove a file
+
+## Renaming or Removing a Directory ##
+rmdir works only on empty directories; otherwise you get an error. 
+
+While typing rm –rf is a fast and easy way to remove a whole filesystem tree recursively, it is extremely dangerous and should be used with the utmost care, especially when used by root (recall that recursive means drilling down through all sub-directories, all the way down a tree).
+
+Command 	|   Usage
+----------- | ---------------------------------------------
+mv 	        |   Rename a directory
+rmdir 	    |   Remove an empty directory
+rm -rf 	    |   Forcefully remove a directory recursively
+
+## Modifying the Command Line Prompt ##
+
+The PS1 variable is the character string that is displayed as the prompt on the command line. Most distributions set PS1 to a known default value, which is suitable in most cases. However, users may want custom information to show on the command line. For example, some system administrators require the user and the host system name to show up on the command line as in:
+
+student@c8 $
+
+This could prove useful if you are working in multiple roles and want to be always reminded of who you are and what machine you are on. The prompt above could be implemented by setting the PS1 variable to: \u@\h \$.
+
+For example:
+
+$ echo $PS1
+\$
+$ PS1="\u@\h \$ "
+student@c8 $ echo $PS1
+\u@\h \$
+student@c8 $
+
+By convention, most systems are set up so that the root user has a pound sign (#) as their prompt.
+
+## Standard File Streams  ##
+
+When commands are executed, by default there are three standard file streams (or descriptors) always open for use: standard input (standard in or stdin), standard output (standard out or stdout) and standard error (or stderr).
+
+Name 	        |   Symbolic Name 	| Value 	|   Example
+--------------- | ----------------- | --------- | --------------
+standard input 	|   stdin 	        |  0 	    |   keyboard
+standard output |	stdout 	        |  1 	    |   terminal
+standard error 	|   stderr 	        |  2 	    |   log file
+
+Usually, stdin is your keyboard, and stdout and stderr are printed on your terminal. stderr is often redirected to an error logging file, while stdin is supplied by directing input to come from a file or from the output of a previous command through a pipe. stdout is also often redirected into a file. Since stderr is where error messages are written, usually nothing will go there.
+
+In Linux, all open files are represented internally by what are called file descriptors. Simply put, these are represented by numbers starting at zero. stdin is file descriptor 0, stdout is file descriptor 1, and stderr is file descriptor 2. Typically, if other files are opened in addition to these three, which are opened by default, they will start at file descriptor 3 and increase from there.
+
+On the next page and in the chapters ahead, you will see examples which alter where a running command gets its input, where it writes its output, or where it prints diagnostic (error) messages. 
