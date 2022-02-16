@@ -227,11 +227,10 @@ Command     |	Usage
 cat 	    |   Used for viewing files that are not very long; it does not provide any scroll-back.
 tac 	    |   Used to look at a file backwards, starting with the last line.
 less 	    |   Used to view larger files because it is a paging program. It pauses at each screen  full of text, provides scroll-back capabilities, and lets you search and navigate within the file.
-
-            |    NOTE: Use / to search for a pattern in the forward direction and ? for a pattern in   the backward direction. An older program named more is still used, but has fewer capabilities: "less is more".
 tail 	    |   Used to print the last 10 lines of a file by default. You can change the number of lines by doing -n 15 or just -15 if you wanted to look at the last 15 lines instead of the default.
 head 	    |   The opposite of tail; by default, it prints the first 10 lines of a file.
 
+.           |    NOTE: Use / to search for a pattern in the forward direction and ? for a pattern in   the backward direction. An older program named more is still used, but has fewer capabilities: "less is more".
 ## touch ##
 touch is often used to set or update the access, change, and modify times of files. By default, it resets a file's timestamp to match the current time.
 
@@ -318,3 +317,30 @@ Usually, stdin is your keyboard, and stdout and stderr are printed on your termi
 In Linux, all open files are represented internally by what are called file descriptors. Simply put, these are represented by numbers starting at zero. stdin is file descriptor 0, stdout is file descriptor 1, and stderr is file descriptor 2. Typically, if other files are opened in addition to these three, which are opened by default, they will start at file descriptor 3 and increase from there.
 
 On the next page and in the chapters ahead, you will see examples which alter where a running command gets its input, where it writes its output, or where it prints diagnostic (error) messages. 
+
+## I/O Redirection ##
+Through the command shell, we can redirect the three standard file streams so that we can get input from either a file or another command, instead of from our keyboard, and we can write output and errors to files or use them to provide input for subsequent commands.
+
+For example, if we have a program called do_something that reads from stdin and writes to stdout and stderr, we can change its input source by using the less-than sign (<) followed by the name of the file to be consumed for input data:
+
+$ do_something < input-file
+
+If you want to send the output to a file, use the greater-than sign (>) as in:
+
+$ do_something > output-file
+
+Because stderr is not the same as stdout, error messages will still be seen on the terminal windows in the above example.
+
+If you want to redirect stderr to a separate file, you use stderr’s file descriptor number (2), the greater-than sign (>), followed by the name of the file you want to hold everything the running command writes to stderr:
+
+$ do_something 2> error-file
+
+NOTE: By the same logic, do_something 1> output-file is the same as do_something > output-file.
+
+A special shorthand notation can send anything written to file descriptor 2 (stderr) to the same place as file descriptor 1 (stdout): 2>&1.
+
+$ do_something > all-output-file 2>&1
+
+bash permits an easier syntax for the above:
+
+$ do_something >& all-output-file
