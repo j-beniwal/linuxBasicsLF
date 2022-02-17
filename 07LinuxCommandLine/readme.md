@@ -344,3 +344,193 @@ $ do_something > all-output-file 2>&1
 bash permits an easier syntax for the above:
 
 $ do_something >& all-output-file
+
+## Pipes ##
+The UNIX/Linux philosophy is to have many simple and short programs (or commands) cooperate together to produce quite complex results, rather than have one complex program with many possible options and modes of operation. In order to accomplish this, extensive use of pipes is made. You can pipe the output of one command or program into another as its input.
+
+In order to do this, we use the vertical-bar, pipe symbol (|), between commands as in:
+ 
+$ command1 | command2 | command3
+
+The above represents what we often call a pipeline, and allows Linux to combine the actions of several commands into one. This is extraordinarily efficient because command2 and command3 do not have to wait for the previous pipeline commands to complete before they can begin hacking at the data in their input streams; on multiple CPU or core systems, the available computing power is much better utilized and things get done quicker.
+
+Furthermore, there is no need to save output in (temporary) files between the stages in the pipeline, which saves disk space and reduces reading and writing from disk, which is often the slowest bottleneck in getting something done.
+
+![pipe image](https://courses.edx.org/assets/courseware/v1/50bdd18ba2e7d4343c184f5e0e3e058a/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/pipeline.png)
+
+## Searching for Files ##
+Being able to quickly find the files you are looking for will save you time and enhance productivity. You can search for files in both your home directory space, or in any other directory or location on the system.
+
+The main tools for doing this are the locate and find utilities. We will also show how to use wildcards in bash, in order to specify any file which matches a given generalized request.
+
+## locate ##
+The locate utility program performs a search taking advantage of a previously constructed database of files and directories on your system, matching all entries that contain a specified character string. This can sometimes result in a very long list.
+
+To get a shorter (and possibly more relevant) list, we can use the grep program as a filter. grep will print only the lines that contain one or more specified strings, as in: 
+
+$ locate zip | grep bin
+
+which will list all the files and directories with both zip and bin in their name. We will cover grep in much more detail later. Notice the use of | to pipe the two commands together.
+
+locate utilizes a database created by a related utility, updatedb. Most Linux systems run this automatically once a day. However, you can update it at any time by just running updatedb from the command line as the root user.
+
+## Wildcards and Matching File Names ##
+
+You can search for a filename containing specific characters using wildcards.
+
+Wildcard    | 	Result
+----------- | ----------------------------------------------------------------------------------------
+?  	        |   Matches any single character
+* 	        |   Matches any string of characters
+[set] 	    |   Matches any character in the set of characters, for example [adf] will match any occurrence of a, d, or f
+[!set] 	    |   Matches any character not in the set of characters
+
+To search for files using the ? wildcard, replace each unknown character with ?. For example, if you know only the first two letters are 'ba' of a three-letter filename with an extension of .out, type ls ba?.out.
+
+To search for files using the * wildcard, replace the unknown string with *. For example, if you remember only that the extension was .out, type ls *.out.
+
+## The find Program ##
+find is an extremely useful and often-used utility program in the daily life of a Linux system administrator. It recurses down the filesystem tree from any particular directory (or set of directories) and locates files that match specified conditions. The default pathname is always the present working directory.
+
+For example, administrators sometimes scan for potentially large core files (which contain diagnostic information after a program fails) that are more than several weeks old in order to remove them.
+
+It is also common to remove files in inessential or outdated files in /tmp (and other volatile directories, such as those containing cached files) that have not been accessed recently. Many Linux distributions use shell scripts that run periodically (through cron usually) to perform such house cleaning.
+
+## Using find ##
+When no arguments are given, find lists all files in the current directory and all of its subdirectories. Commonly used options to shorten the list include -name (only list files with a certain pattern in their name), -iname (also ignore the case of file names), and -type (which will restrict the results to files of a certain specified type, such as d for directory, l for symbolic link, or f for a regular file, etc.). 
+
+Searching for files and directories named gcc:
+
+$ find /usr -name gcc
+
+Searching only for directories named gcc:
+
+$ find /usr -type d -name gcc
+
+Searching only for regular files named gcc:
+
+$ find /usr -type f -name gcc
+
+## Using Advanced find Options ##
+
+Another good use of find is being able to run commands on the files that match your search criteria. The -exec option is used for this purpose.
+
+To find and remove all files that end with .swp:
+
+$ find -name "*.swp" -exec rm {} ’;’
+
+The {} (squiggly brackets) is a placeholder that will be filled with all the file names that result from the find expression, and the preceding command will be run on each one individually.
+
+Please note that you have to end the command with either ‘;’ (including the single-quotes) or "\;". Both forms are fine.
+
+One can also use the -ok option, which behaves the same as -exec, except that find will prompt you for permission before executing the command. This makes it a good way to test your results before blindly executing any potentially dangerous commands.
+
+![image for find](https://courses.edx.org/assets/courseware/v1/cbdf6dc606a39eace7d669077837e628/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/LFS01_ch06_screen41.jpg)
+
+## Finding Files Based on Time and Size ##
+
+It is sometimes the case that you wish to find files according to attributes, such as when they were created, last used, etc., or based on their size. It is easy to perform such searches.
+
+To find files based on time:
+
+$ find / -ctime 3
+
+Here, -ctime is when the inode metadata (i.e. file ownership, permissions, etc.) last changed; it is often, but not necessarily, when the file was first created. You can also search for accessed/last read (-atime) or modified/last written (-mtime) times. The number is the number of days and can be expressed as either a number (n) that means exactly that value, +n, which means greater than that number, or -n, which means less than that number. There are similar options for times in minutes (as in -cmin, -amin, and -mmin).
+
+To find files based on sizes:
+
+$ find / -size 0
+
+Note the size here is in 512-byte blocks, by default; you can also specify bytes (c), kilobytes (k), megabytes (M), gigabytes (G), etc. As with the time numbers above, file sizes can also be exact numbers (n), +n or -n. For details, consult the man page for find.
+
+For example, to find files greater than 10 MB in size and running a command on those files:
+
+$ find / -size +10M -exec command {} ’;’
+
+## Finding Directories and Creating Symbolic Links ##
+
+Find the init.d directory, starting from /, and then create a symbolic link from within your home directory to this directory.
+
+Note that this SysVinit directory is no longer used much in systemd-based systems, but is kept for backwards compatibility reasons.
+
+student:/tmp> find / -type d -name init.d
+student:/tmp> cd ~
+student:/home/student> ln -s /etc/init.d .
+
+# Installing Software #
+
+## Package Management Systems on Linux ##
+
+The core parts of a Linux distribution and most of its add-on software are installed via the Package Management System. Each package contains the files and other instructions needed to make one software component work well and cooperate with the other components that comprise the entire system. Packages can depend on each other. For example, a package for a web-based application written in PHP can depend on the PHP package.
+
+There are two broad families of package managers: those based on Debian and those which use RPM as their low-level package manager. The two systems are incompatible, but broadly speaking, provide the same features and satisfy the same needs. There are some other systems used by more specialized Linux distributions.
+
+In this section, you will learn how to install, remove, or search for packages from the command line using these two package management systems.
+
+## Package Managers: Two Levels ##
+Both package management systems operate on two distinct levels: a low-level tool (such as dpkg or rpm) takes care of the details of unpacking individual packages, running scripts, getting the software installed correctly, while a high-level tool (such as apt-get, dnf, yum, or zypper) works with groups of packages, downloads packages from the vendor, and figures out dependencies.
+
+Most of the time users need to work only with the high-level tool, which will take care of calling the low-level tool as needed. Dependency resolution is a particularly important feature of the high-level tool, as it handles the details of finding and installing each dependency for you. Be careful, however, as installing a single package could result in many dozens or even hundreds of dependent packages being installed.
+
+![this is image](https://courses.edx.org/assets/courseware/v1/b2cfd35138881e077bfc97915aed86b8/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/Package_Managers.png)
+
+## Working With Different Package Management Systems ##
+
+The Advanced Packaging Tool (apt) is the underlying package management system that manages software on Debian-based systems. While it forms the backend for graphical package managers, such as the Ubuntu Software Center and synaptic, its native user interface is at the command line, with programs that include apt (or apt-get) and apt-cache.
+
+dnf is the open source command-line package-management utility for the RPM-compatible Linux systems that belongs to the Red Hat family. dnf has both command line and graphical user interfaces. Fedora and RHEL 8 replaced the older yum utility with dnf, thereby eliminating a lot of historical baggage, as well as introducing many nice new capabilities. dnf is pretty much backwards-compatible with yum for day-to-day commands.
+
+![image link](https://courses.edx.org/assets/courseware/v1/272cd4906572ff37d0352281abe81dbe/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/Different_Package_Mmanagement_Tools.png)
+
+zypper is the package management system for the SUSE/openSUSE family and is also based on RPM. zypper also allows you to manage repositories from the command line. zypper is fairly straightforward to use and resembles dnf/yum quite closely.
+
+To learn the basic packaging commands, take a look at these basic packaging commands:
+
+Operation                       |   rpm                          |   deb
+------------------------------- | ------------------------------ | ---------------------------
+Install package                 | rpm -i foo.rpm 	             | dpkg --install foo.deb
+Install package, dependencies   | dnf install foo 	             | apt-get install foo
+Remove package                  | rpm -e foo.rpm 	             | dpkg --remove foo.deb
+Remove package, dependencies    | dnf remove foo 	             | apt-get autoremove foo
+Update package                  | rpm -U foo.rpm 	             | dpkg --install foo.deb
+Update package, dependencies    | dnf update foo 	             | apt-get install foo
+Update entire system            | dnf update 	                 | apt-get dist-upgrade
+Show all installed packages     | rpm -qa or dnf list installed  | dpkg --list
+Get information on package      | rpm -qil foo 	                 | dpkg --listfiles foo
+Show packages named foo         | dnf list "foo" 	             | apt-cache search foo
+Show all available packages     | dnf list 	                     | apt-cache dumpavail foo
+What package is file part of?   | rpm -qf file 	                 | dpkg --search file
+
+## Installing and Removing Software Packages ##
+Using the upper-level package management system appropriate for your Linux distribution, do the following:
+
+    1. Install the dump package on your system.
+    2. Remove the dump package from your system.
+
+student:/tmp> apt-get install dump
+student:/tmp> apt-get remove dump
+
+# Chapter Summary #
+
+You have completed Chapter 7. Let’s summarize the key concepts we covered:
+
+    Virtual terminals (VT) in Linux are consoles, or command line terminals that use the connected monitor and keyboard.
+    Different Linux distributions start and stop the graphical desktop in different ways.
+    A terminal emulator program on the graphical desktop works by emulating a terminal within a window on the desktop.
+    The Linux system allows you to either log in via text terminal or remotely via the console.
+    When typing your password, nothing is printed to the terminal, not even a generic symbol to indicate that you typed.
+    The preferred method to shut down or reboot the system is to use the shutdown command.
+    There are two types of pathnames: absolute and relative.
+    An absolute pathname begins with the root directory and follows the tree, branch by branch, until it reaches the desired directory or file.
+    A relative pathname starts from the present working directory.
+    Using hard and soft (symbolic) links is extremely useful in Linux.
+    cd remembers where you were last, and lets you get back there with cd -.
+    locate performs a database search to find all file names that match a given pattern.
+    find locates files recursively from a given directory or set of directories.
+    find is able to run commands on the files that it lists, when used with the -exec option.
+    touch is used to set the access, change, and edit times of files, as well as to create empty files.
+    The Advanced Packaging Tool (apt) package management system is used to manage installed software on Debian-based systems.
+    You can use the dnf command-line package management utility for the RPM-based Red Hat Family Linux distributions.
+    The zypper package management system is based on RPM and used for openSUSE.
+
+ 
