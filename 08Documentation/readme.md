@@ -153,4 +153,35 @@ You can also find very helpful documentation for each distribution. Each distrib
 
 Moreover, you can use online search sites to locate helpful resources from all over the Internet, including blog posts, forum and mailing list posts, news articles, and so on.
 
+## Working with Graphical Help Systems ##
+
+Find the graphical help system on your desktop, and try to locate within it the man pages for printf. This may be difficult, so do not waste too much time before looking at the suggestions below. 
+
+If you have been unable to find the man pages this way, we cannot give a unique solution to this. It varies from one Linux distribution to another, and one version to the next, but you should be able to hunt and find out where this is located and get familiar with the interface.
+
+In earlier Linux distributions this was a rather easy task. Those days are gone for some desktops today.
+
+If you are having trouble finding this on recent GNOME desktops, you are not alone. For some reason, clicking on Documentation > Help only brings up documentation about GNOME itself, using the yelp browser.
+
+However, if at the command line you type something like:
+
+student:/tmp> yelp man:cat
+
+it will indeed bring up the man page for cat. However, you cannot type something like man:ls in the location bar and have it work, unless you hit CTRL-l first! It is not exactly clear whether this is a bug or a feature, but a bug seems more likely. Once you are in the page, clicking on links to get other man pages works just fine.
+
+The same mechanism works to get info pages as well, as in:
+
+student:/tmp> yelp info:cpio
+
+# Chapter Summary #
+You have completed Chapter 8. Let’s summarize the key concepts covered:
+
+* The main sources of Linux documentation are the man pages, GNU info, the help options and command, and a rich variety of online documentation sources. 
+* The man utility searches, formats, and displays man pages.
+* 
+* The man pages provide in-depth documentation about programs and other topics about the system, including configuration files, system calls, library routines, and the kernel.
+* The GNU Info System was created by the GNU project as its standard documentation. It is robust and is accessible via command line, web, and graphical tools using info.
+* Short descriptions for commands are usually displayed with the -h or --help argument.
+* You can type help at the command line to display a synopsis of built-in commands.
+* There are many other help resources both on your system and on the Internet.
 
