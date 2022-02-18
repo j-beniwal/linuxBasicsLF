@@ -141,7 +141,7 @@ Such information is placed under the /usr/share/doc directory, grouped in subdir
 
 There are many places to access online Linux documentation, and a little bit of searching will get you buried in it.
 
-The following book has been well-reviewed by other users of this course. It is a free, downloadable command line compendium under a Creative Commons license: "The Linux Command Line" by William Shotts.
+The following book has been well-reviewed by other users of this course. It is a free, downloadable command line compendium under a Creative Commons license: "[The Linux Command Line](http://linuxcommand.org/tlcl.php)" by William Shotts.
 
 You can also find very helpful documentation for each distribution. Each distribution has its own user-generated forums and wiki sections. Here are just a few links to such sources:
 
