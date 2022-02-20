@@ -388,7 +388,7 @@ Put it in the crontab system with:
       
 and verify it was loaded with:
 
-$ crontab -l
+    $ crontab -l
 
     0 10 * * * /tmp/myjob.sh
     $ sudo ls -l /var/spool/cron/student
