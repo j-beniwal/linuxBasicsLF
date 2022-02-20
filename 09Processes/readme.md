@@ -239,13 +239,13 @@ If the system starts using swap often, you can add more swap space. However, add
 
 ### Process List of the top Output ###
 
- PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 287 root      rt   0  280208  17996   8204 S   0.3   0.4   1:58.78 /sbin/multipathd -d -s
- 933 ubuntu    20   0 2601880 107676  17256 S   0.3   2.7   2:25.64 java -jar lib/sonar-application-9.3.0.51899.jar -Dsonar.log.console=tr+
- 086 ubuntu    20   0 2250484 494636  18732 S   0.3  12.3   9:59.06 /usr/lib/jvm/java-11-openjdk/bin/java -Djava.awt.headless=true -Dfile.+
-   1 root      20   0  170872  11164   6500 S   0.0   0.3   1:41.65 /sbin/init
-   2 root      20   0       0      0      0 S   0.0   0.0   0:00.12 [kthreadd]
-   3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rcu_gp]
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    287 root      rt   0  280208  17996   8204 S   0.3   0.4   1:58.78 /sbin/multipathd -d -s
+    933 ubuntu    20   0 2601880 107676  17256 S   0.3   2.7   2:25.64 java -jar lib/sonar-application-9.3.0.51899.jar -Dsonar.log.console=tr+
+    086 ubuntu    20   0 2250484 494636  18732 S   0.3  12.3   9:59.06 /usr/lib/jvm/java-11-openjdk/bin/java -Djava.awt.headless=true -Dfile.+
+      1 root      20   0  170872  11164   6500 S   0.0   0.3   1:41.65 /sbin/init
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.12 [kthreadd]
+      3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rcu_gp]
 
 Each line in the process list of the top output displays information about a process. By default, processes are ordered by highest CPU usage. The following information about each process is displayed:
 
