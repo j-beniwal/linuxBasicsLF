@@ -296,3 +296,69 @@ DOM 	 |  Day of Month| 	1-31
 MON 	 |  Month field |	1-12
 DOW 	 |  Day Of Week |	0-6 (0 = Sunday)
 CMD 	 |  Command 	|Any command to be executed
+
+Examples:
+
+* The entry * * * * * /usr/local/bin/execute/this/script.sh will schedule a job to execute script.sh every minute of every hour of every day of the month, and every month and every day in the week.
+* The entry 30 08 10 06 * /home/sysadmin/full-backup will schedule a full-backup at 8.30 a.m., 10-June, irrespective of the day of the week.
+
+### sleep ###
+
+Sometimes, a command or job must be delayed or suspended. Suppose, for example, an application has read and processed the contents of a data file and then needs to save a report on a backup system. If the backup system is currently busy or not available, the application can be made to sleep (wait) until it can complete its work. Such a delay might be to mount the backup device and prepare it for writing.
+
+sleep suspends execution for at least the specified period of time, which can be given as the number of seconds (the default), minutes, hours, or days. After that time has passed (or an interrupting signal has been received), execution will resume.
+
+The syntax is:
+    sleep NUMBER[SUFFIX]...
+
+where SUFFIX may be:
+
+* s for seconds (the default)
+* m for minutes
+* h for hours
+* d for days.
+
+*sleep* and *at* are quite different; *sleep* delays execution for a specific period, while *at* starts execution at a later time.
+
+
+### Lab 9.3: Using at for Batch Processing in the Future ###
+
+Schedule a very simple task to run at a future time from now. This can be as simple as running ls or date and saving the output. You can use a time as short as one minute in the future.
+
+Note that the command will run in the directory from which you schedule it with at.
+
+Do this:
+
+1. From a short bash script.
+2. Interactively.
+
+Solution
+--------
+1. Create the file testat.sh containing:
+    #!/bin/bash
+    date > /tmp/datestamp
+
+and then make it executable and queue it up with at:
+    $ chmod +x testat.sh
+    $ at now + 1 minute -f testat.sh
+
+You can see if the job is queued up to run with atq:
+    $ atq
+    17	Wed Apr 22 08:55:00 2015 a student
+
+Make sure the job actually ran:
+    $ cat /tmp/datestamp
+    Wed Apr 22 08:55:00 CDT 2015
+
+What happens if you take the /tmp/datestamp out of the command? (Hint: type mail if not prompted to do so!)
+
+2. Interactively it is basically the same procedure. Just queue up the job with:
+    $ at now + 1 minute
+at> date > /tmp/datestamp
+CTRL-D
+
+    $ atq
+             
+
+
+
