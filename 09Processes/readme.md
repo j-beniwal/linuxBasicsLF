@@ -273,3 +273,26 @@ r |	Renice (change the priority of) a specific processes
 k |	Kill a specific process
 f |	Enter the top configuration screen
 o |	Interactively select a new sort order in the process list
+
+## Starting Processes in the Future ##
+
+### Scheduling Future Processes Using at ###
+
+Suppose you need to perform a task on a specific day sometime in the future. However, you know you will be away from the machine on that day. How will you perform the task? You can use the at utility program to execute any non-interactive command at a specified time, as illustrated in the screenshot below:
+
+![image](https://courses.edx.org/assets/courseware/v1/ec37c00269266c49e55f7a52aab93f9a/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/atout.png)
+
+### cron ###
+
+*cron* is a time-based scheduling utility program. It can launch routine background jobs at specific times and/or days on an on-going basis. cron is driven by a configuration file called /etc/crontab (cron table), which contains the various shell commands that need to be run at the properly scheduled times. There are both system-wide crontab files and individual user-based ones. Each line of a crontab file represents a job, and is composed of a so-called CRON expression, followed by a shell command to execute.
+
+Typing crontab -e will open the crontab editor to edit existing jobs or to create new jobs. Each line of the crontab file will contain 6 fields:
+
+Field |  	Description |	Values
+----- | ---------------- | -----------
+MIN 	 |  Minutes 	|0 to 59
+HOUR  | 	Hour field 	|0 to 23
+DOM 	 |  Day of Month| 	1-31
+MON 	 |  Month field |	1-12
+DOW 	 |  Day Of Week |	0-6 (0 = Sunday)
+CMD 	 |  Command 	|Any command to be executed
