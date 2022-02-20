@@ -257,3 +257,19 @@ Each line in the process list of the top output displays information about a pro
 * Percentage of CPU (%CPU) and memory (%MEM) used
 * Execution time (TIME+)
 * Command (COMMAND).
+
+### Interactive Keys with top ###
+
+Besides reporting information, top can be utilized interactively for monitoring and controlling processes. While top is running in a terminal window, you can enter single-letter commands to change its behavior. For example, you can view the top-ranked processes based on CPU or memory usage. If needed, you can alter the priorities of running processes or you can stop/kill a process.
+
+The table lists what happens when pressing various keys when running top:
+
+Command     |	Output
+----------- | ----------------
+t |	Display or hide summary information (rows 2 and 3)
+m |	Display or hide memory information (rows 4 and 5)
+A |	Sort the process list by top resource consumers
+r |	Renice (change the priority of) a specific processes
+k |	Kill a specific process
+f |	Enter the top configuration screen
+o |	Interactively select a new sort order in the process list
