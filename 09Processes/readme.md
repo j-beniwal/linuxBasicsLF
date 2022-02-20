@@ -364,6 +364,61 @@ What happens if you take the /tmp/datestamp out of the command? (Hint: type mail
 
     $ atq
              
+### Lab 9.4: Scheduling a Periodic Task with cron ###
 
+Q. Set up a cron job to do some simple task every day at 10 a.m.
 
+1. Create a file named mycrontab with the following content:
+
+    0 10 * * * /tmp/myjob.sh
+      
+and then create /tmp/myjob.sh containing:
+
+    #!/bin/bash
+    echo Hello I am running $0 at $(date)
+
+and make it executable:
+
+    $ chmod +x /tmp/myjob.sh
+      
+
+Put it in the crontab system with:
+
+    $ crontab mycrontab
+      
+and verify it was loaded with:
+
+$ crontab -l
+
+    0 10 * * * /tmp/myjob.sh
+    $ sudo ls -l /var/spool/cron/student
+    -rw------- 1 student student 25 Apr 22 09:59 /var/spool/cron/student
+    $ sudo cat /var/spool/cron/student
+    0 10 * * * /tmp/myjob.sh
+      
+
+Note if you don't really want this running every day, printing out messages like:
+
+Hello I am running /tmp/myjob.sh at Wed Apr 22 10:03:48 CDT 2015
+and mailing them to you, you can remove it with:
+
+    $ crontab -r
+
+If the machine is not up at 10 AM on a given day, anacron will run the job at a suitable time. 
+
+## Summary ##
+
+You have completed Chapter 9. Let’s summarize the key concepts covered:
+
+* Processes are used to perform various tasks on the system.
+* Processes can be single-threaded or multi-threaded.
+* Processes can be of different types, such as interactive and non-interactive.
+* Every process has a unique identifier (PID) to enable the operating system to keep track of it.
+* The nice value, or niceness, can be used to set priority.
+* ps provides information about the currently running processes.
+* You can use top to get constant real-time updates about overall system performance, as well as information about the processes running on the system.
+* Load average indicates the amount of utilization the system is under at particular times.
+* Linux supports background and foreground processing for a job.
+* at executes any non-interactive command at a specified time.
+* cron is used to schedule tasks that need to be performed at regular intervals.
 
