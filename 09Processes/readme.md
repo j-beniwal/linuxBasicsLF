@@ -333,29 +333,34 @@ Do this:
 2. Interactively.
 
 Solution
---------
+
 1. Create the file testat.sh containing:
+    
     #!/bin/bash
     date > /tmp/datestamp
 
 and then make it executable and queue it up with at:
+    
     $ chmod +x testat.sh
     $ at now + 1 minute -f testat.sh
 
 You can see if the job is queued up to run with atq:
+    
     $ atq
     17	Wed Apr 22 08:55:00 2015 a student
 
 Make sure the job actually ran:
+    
     $ cat /tmp/datestamp
     Wed Apr 22 08:55:00 CDT 2015
 
 What happens if you take the /tmp/datestamp out of the command? (Hint: type mail if not prompted to do so!)
 
 2. Interactively it is basically the same procedure. Just queue up the job with:
+    
     $ at now + 1 minute
-at> date > /tmp/datestamp
-CTRL-D
+    at> date > /tmp/datestamp
+    CTRL-D
 
     $ atq
              
