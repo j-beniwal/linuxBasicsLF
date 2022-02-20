@@ -196,7 +196,7 @@ pstree displays the processes running on the system in the form of a tree diagra
 While a static view of what the system is doing is useful, monitoring the system performance live over time is also valuable. One option would be to run ps at regular intervals, say, every few seconds. A better alternative is to use top to get constant real-time updates (every two seconds by default), until you exit by typing q.top clearly highlights which processes are consuming the most CPU cycles and memory (using appropriate commands from within top).
 
 ### First Line of the top Output ###
-*top - 03:16:10 up 15 days, 14:00,  1 user,  load average: 0.02, 0.01, 0.00*
+    top - 03:16:10 up 15 days, 14:00,  1 user,  load average: 0.02, 0.01, 0.00
 
 The first line of the top output displays a quick summary of what is happening in the system, including:
 
@@ -207,12 +207,12 @@ The first line of the top output displays a quick summary of what is happening i
 The load average determines how busy the system is. A load average of 1.00 per CPU indicates a fully subscribed, but not overloaded, system. If the load average goes above this value, it indicates that processes are competing for CPU time. If the load average is very high, it might indicate that the system is having a problem, such as a runaway process (a process in a non-responding state).
 
 ### Second Line of the top Output ###
-*Tasks: 134 total,   1 running, 133 sleeping,   0 stopped,   0 zombie*
+    Tasks: 134 total,   1 running, 133 sleeping,   0 stopped,   0 zombie
 
 The second line of the top output displays the total number of processes, the number of running, sleeping, stopped, and zombie processes. Comparing the number of running processes with the load average helps determine if the system has reached its capacity or perhaps a particular user is running too many processes. The stopped processes should be examined to see if everything is running correctly.
 
 ### Third Line of the top Output ###
-*%Cpu(s):  0.0 us,  0.2 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st*
+    %Cpu(s):  0.0 us,  0.2 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
 
 The third line of the *top* output indicates how the CPU time is being divided between the users (*us*) and the kernel (*sy*) by displaying the percentage of CPU time used for each.
 
@@ -223,8 +223,8 @@ Interrupts include the percentage of hardware (*hi*) vs. software interrupts (*s
 Steal time (*st*) is generally used with virtual machines, which has some of its idle CPU time taken for other uses.
 
 ### Fourth and Fifth Lines of the top Output ###
-*MiB Mem :   3924.1 total,    235.6 free,   1766.7 used,   1921.8 buff/cache*
-*MiB Swap:      0.0 total,      0.0 free,      0.0 used.   1908.8 avail Mem*
+    MiB Mem :   3924.1 total,    235.6 free,   1766.7 used,   1921.8 buff/cache
+    MiB Swap:      0.0 total,      0.0 free,      0.0 used.   1908.8 avail Mem
 
 The fourth and fifth lines of the top output indicate memory usage, which is divided in two categories:
 
