@@ -282,3 +282,18 @@ Directory Name  |   Usage
 /srv    |    	Site-specific data served up by the system. Seldom used
 /tmp    |    	Temporary files; on some distributions erased across a reboot and/or may actually be a ramdisk in memory
 /usr    |    	Multi-user applications, utilities and data
+
+### The /usr Directory Tree ###
+
+The */usr* directory tree contains theoretically non-essential programs and scripts (in the sense that they should not be needed to initially boot the system) and has at least the following sub-directories:
+
+Directory Name |  Usage
+-------------- | --------------------------------
+/usr/include|	Header files used to compile applications
+/usr/lib 	|   Libraries for programs in /usr/bin and /usr/sbin
+/usr/lib64  | 	64-bit libraries for 64-bit programs in /usr/bin and /usr/sbin
+/usr/sbin   |	Non-essential system binaries, such as system daemons
+/usr/share  | 	Shared data used by applications, generally architecture-independent
+/usr/src 	|   Source code, usually for the Linux kernel
+/usr/local  | 	Data and programs specific to the local machine; subdirectories include bin, sbin, lib, share, include, etc.
+/usr/bin 	|   This is the primary directory of executable commands on the system
