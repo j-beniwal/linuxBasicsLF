@@ -297,3 +297,114 @@ Directory Name |  Usage
 /usr/src 	|   Source code, usually for the Linux kernel
 /usr/local  | 	Data and programs specific to the local machine; subdirectories include bin, sbin, lib, share, include, etc.
 /usr/bin 	|   This is the primary directory of executable commands on the system
+
+## Comparing Files and File Types ##
+
+### Comparing Files with diff ###
+
+Now that you know about the filesystem and its structure, let’s learn how to manage files and directories.
+
+diff is used to compare files and directories. This often-used utility program has many useful options (see: man diff) including:
+
+diff Option |	Usage
+----------- | ----------------
+-c  |   Provides a listing of differences that include three lines of context before and after the lines differing in content
+-r 	|   Used to recursively compare subdirectories, as well as the current directory
+-i 	|   Ignore the case of letters
+-w 	|   Ignore differences in spaces and tabs (white space)
+-q 	|   Be quiet: only report if files are different without listing the differences
+
+To compare two files, at the command prompt, type 
+
+    diff [options] <filename1> <filename2>
+
+diff is meant to be used for text files; for binary files, one can use cmp. 
+
+In this section, you will learn additional methods for comparing files and how to apply patches to files.
+
+### Using diff3 and patch ###
+
+You can compare three files at once using diff3, which uses one file as the reference basis for the other two. For example, suppose you and a co-worker both have made modifications to the same file working at the same time independently. diff3 can show the differences based on the common file you both started with. The syntax for diff3 is as follows:
+
+    $ diff3 MY-FILE COMMON-FILE YOUR-FILE
+
+Many modifications to source code and configuration files are distributed utilizing patches, which are applied, not surprisingly, with the patch program. A patch file contains the deltas (changes) required to update an older version of a file to the new one. The patch files are actually produced by running diff with the correct options, as in:
+
+    $ diff -Nur originalfile newfile > patchfile
+
+Distributing just the patch is more concise and efficient than distributing the entire file. For example, if only one line needs to change in a file that contains 1000 lines, the patch file will be just a few lines long.
+
+To apply a patch, you can just do either of the two methods below:
+
+    $ patch -p1 < patchfile
+    $ patch originalfile patchfile
+
+The first usage is more common, as it is often used to apply changes to an entire directory tree, rather than just one file, as in the second example. To understand the use of the -p1 option and many others, see the man page for patch.
+
+### Using the file Utility ###
+
+In Linux, a file's extension often does not categorize it the way it might in other operating systems. One cannot assume that a file named file.txt is a text file and not an executable program. In Linux, a filename is generally more meaningful to the user of the system than the system itself. In fact, most applications directly examine a file's contents to see what kind of object it is rather than relying on an extension. This is very different from the way Windows handles filenames, where a filename ending with .exe, for example, represents an executable binary file.
+
+The real nature of a file can be ascertained by using the file utility. For the file names given as arguments, it examines the contents and certain characteristics to determine whether the files are plain text, shared libraries, executable programs, scripts, or something else.
+
+![Using the file Utility](https://courses.edx.org/assets/courseware/v1/6bc751d9dafe1a200e66f2eb4479db0e/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/fileu1910.png)
+
+### Lab 10.2: Using diff and patch ###
+
+Linux and other open source communities often use the patch utility to disseminate modifications and updates. Here, we will give a practical introduction to using diff and patch.
+
+It would be a good idea to read the man pages for both patch and diff to learn more about advanced options and techniques, that will help one to work more effectively with patch. In particular, the form of patches has a lot to do with whether they can be accepted in their submitted form.
+
+* Change to the /tmp directory.
+* Copy a text file to /tmp. For example, copy /etc/group to /tmp.
+* dd cannot only copy directly from raw disk devices, but from regular files as well. Remember, in Linux, everything is pretty much treated as a file. dd can also perform various conversions. For example, the conv=ucase option will convert all of the characters to upper-case characters. We will use dd to copy the text file to a new file in /tmp while converting characters to upper-case, as in: student:/tmp> dd if=/tmp/group of=/tmp/GROUP conv=ucase.
+* According to the man page for patch, the preferred options for preparing a patch with diff are -Naur when comparing two directory trees recursively. We will ignore the -a option, which means treat all files as text, since patch and diff should only be used on text files anyway. Since we are just comparing two files, we do not need to use the N or r options to diff, but we could use them anyway as it will not make a difference. Compare group and GROUP using diff, and prepare a proper patch file.
+* Use patch to patch the original file, /tmp/group, so its contents now match those of the modified file, /tmp/GROUP. You might try with the --dry-run option first!
+* Finally, to prove that your original file is now patched to be the same one with all upper-case characters, use diff on those two files. The files should be the same and you will not get any output from diff.
+
+For this exercise, you could use any text file, but we will use /etc/group as described.
+
+    student:/tmp> cd /tmp
+    student:/tmp> cp /etc/group /tmp
+    student:/tmp> dd if=/tmp/group of=/tmp/GROUP conv=ucase
+
+    1+1 records in
+    1+1 records out
+    963 bytes (963 B) copied, 0.000456456 s, 2.1 MB/s
+
+    student:/tmp> diff -Nur group GROUP > patchfile
+    student:/tmp> cat patchfile
+
+    --- group       2015-04-17 11:03:26.710813740 -0500
+    +++ GROUP       2015-04-17 11:15:14.602813740 -0500
+    @@ -1,68 +1,68 @@
+    -root:x:0:
+    -daemon:x:1:
+    -bin:x:2:
+    -sys:x:3:
+    ....
+    -libvirtd:x:127:student
+    -vboxsf:x:999:
+    +ROOT:X:0:
+    +DAEMON:X:1:
+    +BIN:X:2:
+    +SYS:X:3:
+    .....
+
+    student:/tmp> patch --dry-run group patchfile
+
+    checking file group
+
+    student:/tmp> patch  group patchfile
+
+    patching file group
+
+    Note you could have also done either of these two commands:
+
+    student:/tmp> patch group < patchfile
+    student:/tmp> patch < patchfile
+
+    student:/tmp> diff group GROUP
+
+    student:/tmp>
+
