@@ -450,3 +450,212 @@ zip 	|   Is often required to examine and decompress archives from other operati
 These techniques vary in the efficiency of the compression (how much space is saved) and in how long they take to compress; generally, the more efficient techniques take longer. Decompression time does not vary as much across different methods.
 
 In addition, the **tar** utility is often used to group files in an archive and then compress the whole archive at once.
+
+### Compressing Data Using gzip ###
+
+**gzip** is the most often used Linux compression utility. It compresses very well and is very fast. The following table provides some usage examples:
+
+Command         |	Usage
+--------------- | --------------------------------
+gzip * 	        |    Compresses all files in the current directory; each file is compressed and renamed with a .gz extension.
+gzip -r projectX| 	Compresses all files in the projectX directory, along with all files in all of the directories under projectX.
+gunzip foo 	    |    De-compresses foo found in the file foo.gz. Under the hood, the gunzip command is actually the same as gzip –d.
+
+### Compressing Data Using bzip2 ###
+
+**bzip2** has a syntax that is similar to gzip but it uses a different compression algorithm and produces significantly smaller files, at the price of taking a longer time to do its work. Thus, it is more likely to be used to compress larger files.
+
+Examples of common usage are also similar to gzip:
+
+Command 	  |  Usage
+------------- | ------------------------
+bzip2 * 	  |  Compresses all of the files in the current directory and replaces each file with a file renamed with a .bz2 extension.
+bunzip2 *.bz2 |	Decompresses all of the files with an extension of .bz2 in the current directory. Under the hood, bunzip2 is the same as calling bzip2 -d.
+
+NOTE: bzip2 has lately become deprecated due to lack of maintenance and the superior compression ratios of xz which is actively maintained.
+
+### Compressing Data Using xz ###
+
+xz is the most space efficient compression utility used in Linux and is used to store archives of the Linux kernel. Once again, it trades a slower compression speed for an even higher compression ratio.
+
+Some usage examples:
+
+Command 	                       | Usage
+---------------------------------- | ---------------------------------------------
+xz * 	                          |  Compresses all of the files in the current directory and replaces each file with one with a .xz extension.
+xz foo 	                        |    Compresses foo into foo.xz using the default compression level (-6), and removes foo if compression succeeds.
+xz -dk bar.xz 	                 |   Decompresses bar.xz into bar and does not remove bar.xz even if decompression is successful.
+xz -dcf a.txt b.txt.xz > abcd.txt| 	Decompresses a mix of compressed and uncompressed files to standard output, using a single command.
+xz -d *.xz 	                    |    Decompresses the files compressed using xz.
+
+Compressed files are stored with a .xz extension.
+
+### Handling Files Using zip ###
+
+The **zip** program is not often used to compress files in Linux, but is often required to examine and decompress archives from other operating systems. It is only used in Linux when you get a zipped file from a Windows user. It is a legacy program.
+
+Command 	           | Usage
+---------------------- | ---------------------------------------------
+zip backup * 	      |  Compresses all files in the current directory and places them in the backup.zip.
+zip -r backup.zip ~ |	Archives your login directory (~) and all files and directories under it in backup.zip.
+unzip backup.zip 	  |  Extracts all files in backup.zip and places them in the current directory.
+
+### Archiving and Compressing Data Using tar ###
+
+Historically, **tar** stood for "tape archive" and was used to archive files to a magnetic tape. It allows you to create or extract files from an archive file, often called a **tarball**. At the same time, you can optionally compress while creating the archive, and decompress while extracting its contents.
+
+Here are some examples of the use of **tar**:
+
+Command 	                    |   Usage
+------------------------------- | ---------------------------------------
+tar xvf mydir.tar 	            |   Extract all the files in mydir.tar into the mydir directory.
+tar zcvf mydir.tar.gz mydir 	|   Create the archive and compress with gzip.
+tar jcvf mydir.tar.bz2 mydir    |	Create the archive and compress with bz2.
+tar Jcvf mydir.tar.xz mydir 	|   Create the archive and compress with xz.
+tar xvf mydir.tar.gz 	        |   Extract all the files in mydir.tar.gz into the mydir directory.
+
+NOTE: You do not have to tell tar it is in gzip format.
+
+You can separate out the archiving and compression stages, as in:
+
+Historically, tar stood for "tape archive" and was used to archive files to a magnetic tape. It allows you to create or extract files from an archive file, often called a tarball. At the same time, you can optionally compress while creating the archive, and decompress while extracting its contents.
+
+Here are some examples of the use of tar:
+
+ 
+Command 	Usage
+tar xvf mydir.tar 	Extract all the files in mydir.tar into the mydir directory.
+tar zcvf mydir.tar.gz mydir 	Create the archive and compress with gzip.
+tar jcvf mydir.tar.bz2 mydir 	Create the archive and compress with bz2.
+tar Jcvf mydir.tar.xz mydir 	Create the archive and compress with xz.
+tar xvf mydir.tar.gz 	Extract all the files in mydir.tar.gz into the mydir directory.
+NOTE: You do not have to tell tar it is in gzip format.
+
+ 
+
+You can separate out the archiving and compression stages, as in:
+
+    $ tar cvf mydir.tar mydir ; gzip mydir.tar
+    $ gunzip mydir.tar.gz ; tar xvf mydir.tar
+
+but this is slower and wastes space by creating an unneeded intermediary .tar file.
+
+To demonstrate the relative efficiency of **gzip**, **bzip2**, and **xz**, the following screenshot shows the results of compressing a purely text file directory tree (the include directory from the kernel source) using the three methods.
+
+![comp image](https://courses.edx.org/assets/courseware/v1/72c55fb093021786337d84cd0a081993/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/tartimes.png)
+
+This shows that as compression factors go up, CPU time does as well (i.e. producing smaller archives takes longer).
+
+### Disk-to-Disk Copying (dd) ###
+
+The **dd** program is very useful for making copies of raw disk space. For example, to back up your Master Boot Record (MBR) (the first 512-byte sector on the disk that contains a table describing the partitions on that disk), you might type:
+
+    dd if=/dev/sda of=sda.mbr bs=512 count=1
+
+Typing:
+
+    dd if=/dev/sda of=/dev/sdb
+
+to make a copy of one disk onto another, will delete everything that previously existed on the second disk.
+
+An exact copy of the first disk device is created on the second disk device.
+
+**Do not experiment with this command as written above, as it can erase a hard disk!**
+
+Exactly what the name dd stands for is an often-argued item. The words data definition is the most popular theory and has roots in early IBM history. Often, people joke that it means disk destroyer and other variants such as delete data!
+
+![disk to disk](https://courses.edx.org/assets/courseware/v1/6ed7efb57f544c1bbac9baf55f75e535/asset-v1:LinuxFoundationX+LFS101x+2T2021+type@asset+block/LFS01_ch08_screen_41.jpg)
+
+### Lab 10.3: Archiving (Backing Up) the Home Directory ###
+
+Archiving (or backing up) your files from time to time is essential good hygiene. You might type a command and thereby unintentionally clobber files you need and did not mean to alter.
+
+Furthermore, while your hardware may be deemed fairly reliable, all devices do fail in some fashion eventually (even if it is just an unexpected power failure). Often, this happens at the worst possible time. Periodically backing up files is a good habit to get into.
+
+It is, of course, important to do backups to external systems through a network, or onto external storage, such as an external drive or USB stick. Here, we will be making a back up archive on the same system, which is very useful, but won’t help if the drive fails catastrophically, or your computer is stolen or the building gets zapped by an asteroid or a fire.
+
+First, using tar, back up all files and subdirectories under your home directory. Place the resulting tarball file in the /tmp directory, giving it the name backup.tar.
+
+Second, accomplish the same task with gzip compression using the -z option to tar, creating /tmp/backup.tar.gz.
+
+Compare the size of the two files (with ls -l).
+
+For additional experience, make backups using the -j option using the bzip2 compression, and -J option for using the xz compression.
+
+**SOLUTION**
+
+To construct a tarball archive of your home directory you can do:
+
+    student:/tmp> tar -cvf /tmp/backup.tar ~
+      
+
+or equivalently
+
+    student:/tmp> tar -cvf /tmp/backup.tar /home/student
+      
+
+Note you can have omitted the - in the options with no change. In the following we will not bother using the -v option for verbose. To create archives with all three compression utilities:
+
+    student:/tmp> tar zcf /tmp/backup.tar.gz ~
+    student:/tmp> tar jcf /tmp/backup.tar.bz2 ~
+    student:/tmp> tar Jcf /tmp/backup.tar.xz ~
+      
+
+Comparing the sizes (first using the -h option to ls to make it human-readable):
+
+    student@ubuntu:~student:/tmp> ls -lh /tmp/backup*
+
+    -rw-rw-r-- 1 student student 8.3M Apr 17 10:14 /tmp/backup2.tar.gz
+    -rw-rw-r-- 1 student student  12M Apr 17 10:13 /tmp/backup.tar
+    -rw-rw-r-- 1 student student 8.4M Apr 17 10:15 /tmp/backup.tar.bz2
+    -rw-rw-r-- 1 student student 8.3M Apr 17 10:14 /tmp/backup.tar.gz
+    -rw-rw-r-- 1 student student 8.2M Apr 17 10:15 /tmp/backup.tar.xz
+      
+
+and then without it:
+
+    student@ubuntu:~student:/tmp> ls -l /tmp/backup*
+
+    -rw-rw-r-- 1 student student  8686942 Apr 17 10:14 /tmp/backup2.tar.gz
+    -rw-rw-r-- 1 student student 12226560 Apr 17 10:13 /tmp/backup.tar
+    -rw-rw-r-- 1 student student  8720491 Apr 17 10:15 /tmp/backup.tar.bz2
+    -rw-rw-r-- 1 student student  8686929 Apr 17 10:14 /tmp/backup.tar.gz
+    -rw-rw-r-- 1 student student  8551064 Apr 17 10:15 /tmp/backup.tar.xz
+      
+
+Note in this case there is not much difference in the different archiving methods, but this particular directory was a bad choice because it already contained a lot of compressed files. A somewhat better example involving more text files:
+
+    student:/tmp> tar cf  /tmp/doc.tar     /usr/share/doc
+    student:/tmp> tar zcf /tmp/doc.tar.gz  /usr/share/doc
+    student:/tmp> tar jcf /tmp/doc.tar.bz2 /usr/share/doc
+    student:/tmp> tar Jcf /tmp/doc.tar.xz  /usr/share/doc
+
+    student:/tmp> ls -lh /tmp/doc.tar*
+
+    -rw-rw-r-- 1 student student 85M Apr 17 10:34 /tmp/doc.tar
+    -rw-rw-r-- 1 student student 31M Apr 17 10:35 /tmp/doc.tar.bz2
+    -rw-rw-r-- 1 student student 34M Apr 17 10:34 /tmp/doc.tar.gz
+    -rw-rw-r-- 1 student student 28M Apr 17 10:36 /tmp/doc.tar.xz
+      
+
+which shows xz did best, followed by bz2 and then gz. You may have noticed, however, the inverse relationship between the size reduction of the compression and how long it took! 
+
+## Chapter Summary ##
+
+You have completed Chapter 10. Let’s summarize the key concepts covered:
+
+* The filesystem tree starts at what is often called the root directory (or trunk, or /).
+* The  Filesystem Hierarchy Standard (FHS) provides Linux developers and system administrators a standard directory structure for the filesystem.
+* Partitions help to segregate files according to usage, ownership, and type.
+* Filesystems can be mounted anywhere on the main filesystem tree at a mount point. Automatic filesystem mounting can be set up by editing /etc/fstab.
+* NFS (Network File System) is a useful method for sharing files and data through the network systems.
+* Filesystems like /proc are called pseudo filesystems because they exist only in memory.
+* /root (slash-root) is the home directory for the root user.
+* /var may be put in its own filesystem so that growth can be contained and not fatally affect the system.
+* /boot contains the basic files needed to boot the system.
+* patch is a very useful tool in Linux. Many modifications to source code and configuration files are distributed with patch files, as they contain the deltas or changes to go from an old version of a file to the new version of a file.
+* File extensions in Linux do not necessarily mean that a file is of a certain type.
+* cp is used to copy files on the local machine, while rsync can also be used to copy files from one machine to another, as well as synchronize contents.
+* gzip, bzip2, xz and zip are used to compress files.
+* tar allows you to create or extract files from an archive file, often called a tarball. You can optionally compress while creating the archive, and decompress while extracting its contents.
+* dd can be used to make large exact copies, even of entire disk partitions, efficiently.
