@@ -408,3 +408,45 @@ For this exercise, you could use any text file, but we will use /etc/group as de
 
     student:/tmp>
 
+## Backing Up and Compressing Data ##
+
+### Backing Up Data ###
+
+There are many ways you can back up data or even your entire system. Basic ways to do so include the use of simple copying with *cp* and use of the more robust *rsync*.
+
+Both can be used to synchronize entire directory trees. However, rsync is more efficient, because it checks if the file being copied already exists. If the file exists and there is no change in size or modification time, rsync will avoid an unnecessary copy and save time. Furthermore, because rsync copies only the parts of files that have actually changed, it can be very fast.
+
+cp can only copy files to and from destinations on the local machine (unless you are copying to or from a filesystem mounted using NFS), but rsync can also be used to copy files from one machine to another. Locations are designated in the target:path form, where target can be in the form of someone@host. The someone@ part is optional and used if the remote user is different from the local user.
+
+rsync is very efficient when recursively copying one directory tree to another, because only the differences are transmitted over the network. One often synchronizes the destination directory tree with the origin, using the -r option to recursively walk down the directory tree copying all files and directories below the one listed as the source.
+
+### Using rsync ###
+
+rsync is a very powerful utility. For example, a very useful way to back up a project directory might be to use the following command:
+
+    $ rsync -r project-X archive-machine:archives/project-X
+
+Note that rsync can be very destructive! Accidental misuse can do a lot of harm to data and programs, by inadvertently copying changes to where they are not wanted. Take care to specify the correct options and paths. It is highly recommended that you first test your rsync command using the -dry-run option to ensure that it provides the results that you want.
+
+To use rsync at the command prompt, type rsync sourcefile destinationfile, where either file can be on the local machine or on a networked machine; The contents of sourcefile will be copied to destinationfile.
+
+A good combination of options is shown in:
+
+    $ rsync --progress -avrxH  --delete sourcedir destdir
+
+### Compressing Data ###
+
+File data is often compressed to save disk space and reduce the time it takes to transmit files over networks.
+
+Linux uses a number of methods to perform this compression, including:
+
+Command |	Usage
+------- | ----------------------------------------------------
+gzip    |	The most frequently used Linux compression utility
+bzip2   | 	Produces files significantly smaller than those produced by gzip
+xz 	    |   The most space-efficient compression utility used in Linux
+zip 	|   Is often required to examine and decompress archives from other operating systems
+
+These techniques vary in the efficiency of the compression (how much space is saved) and in how long they take to compress; generally, the more efficient techniques take longer. Decompression time does not vary as much across different methods.
+
+In addition, the **tar** utility is often used to group files in an archive and then compress the whole archive at once.
